@@ -38,7 +38,7 @@ stages:
      runOnce:
        deploy:
          steps:
-           - script: echo deploy prod
+           - script: echo deploy production
   
 
 
