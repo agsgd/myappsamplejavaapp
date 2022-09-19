@@ -22,7 +22,9 @@ stages:
 
 
 - stage: dev
-  dependsOn: Build
+  dependsOn:
+  - Build
+  - package
 
   jobs:
   - job: firstjob
