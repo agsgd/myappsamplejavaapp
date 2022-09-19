@@ -31,5 +31,21 @@ jobs:
   steps:
     - script: echo Job03 Hello, world!
       displayName: 'Run a one-line script'
+- job: job4
+  dependsOn:
+  - job3
+  - job2
+  steps:
+    - script: echo Job04 Hello, world!
+      displayName: 'Run a one-line script'
 
-  
+- job: job5
+  dependsOn:
+  - job4
+  steps:
+    - script: echo Job05 Hello, world!
+      displayName: 'Run a one-line script'
+- job: job6
+  steps:
+    - script: echo Job06 Hello, world!
+      displayName: 'Run a one-line script'
