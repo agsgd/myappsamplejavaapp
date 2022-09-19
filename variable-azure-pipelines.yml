@@ -11,25 +11,50 @@ stages:
     steps:
       - bash: echo Build firstjob 
       - bash: echo $(pipelineLevelVariable)
+      - bash: echo $(SYSTEM_ACCESSTOKEN)
+      - bash: echo $(Agent.BuildDirectory)
+      - bash: echo $(Agent.ContainerMapping)
+      - bash: echo $(Agent.HomeDirectory)
+      - bash: echo $(Agent.Id)
+      - bash: echo $(Agent.JobName)
+      - bash: echo $(Agent.JobStatus)
+      - bash: echo $(Agent.MachineName)
+      - bash: echo $(Agent.Name)
+      - bash: echo $(Agent.OS)
+      - bash: echo $(Agent.OSArchitecture)
+      - bash: echo $(Agent.TempDirectory)
+      - bash: echo $(Agent.ToolsDirectory)
+      - bash: echo $(Agent.WorkFolder)
+      - bash: echo $(Build.ArtifactStagingDirectory)
+
+
+
+
+
+
+
+
+
+#   - job: secondjob
+#     steps:
+#       - bash: echo Build secondjob 
+
+
+# - stage: pro
+#   pool:
+
+#   variables: 
+#     environment: prod
+#   dependsOn:
+#   - Build
+
+#   jobs:
+#   - job: firstjob
+#     steps:
+#       - bash: echo $(environment) firstjob 
  
-  - job: secondjob
-    steps:
-      - bash: echo Build secondjob 
-
-
-- stage: pro
-  variables: 
-    environment: prod
-  dependsOn:
-  - Build
-
-  jobs:
-  - job: firstjob
-    steps:
-      - bash: echo $(environment) firstjob 
- 
-  - job: secondjob
-    steps:
-      - bash: echo echo $(environment) secondjob   
+#   - job: secondjob
+#     steps:
+#       - bash: echo echo $(environment) secondjob   
 
 
