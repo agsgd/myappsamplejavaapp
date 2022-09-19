@@ -9,43 +9,68 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 # pipeline >> stages >> jobs >> tasks (or) steps
+ 
+stages:
+- stage: Build
+  jobs:
+  - job: FirstJob
+    steps:
+    - bash: echo Build FirstJob
+    - bash: echo $(PipelineLevelVariable)
+    - bash: echo $(Build.BuildNumber)
+    - bash: echo $(Build.BuildId)
+    - bash: echo $(Build.SourceBranchName)
+    - bash: echo $(Build.SourcesDirectory)
+    - bash: echo $(System.DefaultWorkingDirectory)
+    - bash: ls -R $(System.DefaultWorkingDirectory)
+    - bash: echo $(Build.ArtifactStagingDirectory)
+    - bash: java -version
+    - bash: node --version
+    - bash: python --version 
+    - bash: mvn -version 
+    - bash: ls -R $(Build.ArtifactStagingDirectory)
+  - job: secondjob 
+    steps:
+      - bash: echo second job
+      - script: echo second job from script
 
-jobs:
-- job: job1
-  steps:
-    - script: echo Job01 Hello, world!
-      displayName: 'Run a one-line script'
 
-    - script: |
-        echo Add other tasks to build, test, and deploy your project.
-        echo See https://aka.ms/yaml
-      displayName: 'Run a multi-line script'
-- job: job2
-  dependsOn: job1
-  steps:
-    - script: echo Job02 Hello, world!
-      displayName: 'Run a one-line script'
+    # jobs:
+# - job: job1
+#   steps:
+#     - script: echo Job01 Hello, world!
+#       displayName: 'Run a one-line script'
 
-- job: job3
-  dependsOn: job2
-  steps:
-    - script: echo Job03 Hello, world!
-      displayName: 'Run a one-line script'
-- job: job4
-  dependsOn:
-  - job3
-  - job2
-  steps:
-    - script: echo Job04 Hello, world!
-      displayName: 'Run a one-line script'
+#     - script: |
+#         echo Add other tasks to build, test, and deploy your project.
+#         echo See https://aka.ms/yaml
+#       displayName: 'Run a multi-line script'
+# - job: job2
+#   dependsOn: job1
+#   steps:
+#     - script: echo Job02 Hello, world!
+#       displayName: 'Run a one-line script'
 
-- job: job5
-  dependsOn:
-  - job4
-  steps:
-    - script: echo Job05 Hello, world!
-      displayName: 'Run a one-line script'
-- job: job6
-  steps:
-    - script: echo Job06 Hello, world!
-      displayName: 'Run a one-line script'
+# - job: job3
+#   dependsOn: job2
+#   steps:
+#     - script: echo Job03 Hello, world!
+#       displayName: 'Run a one-line script'
+# - job: job4
+#   dependsOn:
+#   - job3
+#   - job2
+#   steps:
+#     - script: echo Job04 Hello, world!
+#       displayName: 'Run a one-line script'
+
+# - job: job5
+#   dependsOn:
+#   - job4
+#   steps:
+#     - script: echo Job05 Hello, world!
+#       displayName: 'Run a one-line script'
+# - job: job6
+#   steps:
+#     - script: echo Job06 Hello, world!
+#       displayName: 'Run a one-line script'
