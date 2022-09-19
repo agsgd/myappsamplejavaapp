@@ -25,9 +25,26 @@ stages:
       - bash: echo $(Agent.TempDirectory)
       - bash: echo $(Agent.ToolsDirectory)
       - bash: echo $(Agent.WorkFolder)
+      - bash: echo $(System.DefaultWorkingDirectory)
       - bash: echo $(Build.ArtifactStagingDirectory)
-
-
+      - bash: echo ls -R $(System.DefaultWorkingDirectory)
+      - bash: java -version
+      - bash: git --version
+      - bash: head --version
+      - bash: node --version
+      - bash: docker --version
+      - bash: mvn --version
+      - bash: ansible --version
+      - bash: python3 --version
+      - bash: echo ls -R $(Build.ArtifactStagingDirectory)
+      - task: CopyFiles@2
+        inputs:
+          SourceFolder: '$(System.DefaultWorkingDirectory)'
+          Contents: |
+            **/*.yaml
+            **/*.tf
+          TargetFolder: '$(Build.ArtifactStagingDirectory)'
+      - bash: echo ls -R $(Build.ArtifactStagingDirectory)
 
 
 
