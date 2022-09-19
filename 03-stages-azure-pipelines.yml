@@ -24,7 +24,6 @@ stages:
 - stage: dev
   dependsOn:
   - Build
-  - package
 
   jobs:
   - job: firstjob
@@ -40,6 +39,7 @@ stages:
   dependsOn:
   - Build
   - package
+  - dev
   jobs:
   - job: firstjob
     steps:
