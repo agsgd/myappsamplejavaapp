@@ -36,7 +36,7 @@ stages:
       - bash: mvn --version
       - bash: ansible --version
       - bash: python3 --version
-      - bash: echo ls -R $(Build.ArtifactStagingDirectory)
+      - bash: ls -R $(Build.ArtifactStagingDirectory)
       - task: CopyFiles@2
         inputs:
           SourceFolder: '$(System.DefaultWorkingDirectory)'
@@ -44,8 +44,12 @@ stages:
             **/*.yml
             **/*.tf
           TargetFolder: '$(Build.ArtifactStagingDirectory)'
-      - bash: echo ls -R $(Build.ArtifactStagingDirectory)
-
+      - bash: ls -R $(Build.ArtifactStagingDirectory)
+      - task: PublishBuildArtifacts@1
+        inputs:
+          PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+          ArtifactName: 'drop'
+          publishLocation: 'Container'
 
 
 
