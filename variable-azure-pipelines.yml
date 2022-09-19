@@ -10,11 +10,7 @@ strategy:
       operatingSystem: 'macos latest'
 pool:
   vmImage: $(operatingSystem)
-stages:
-- stage: Build
-  jobs:
-  - job: firstjob
-    steps:
+steps:
       - bash: echo Build firstjob 
       - bash: echo $(pipelineLevelVariable)
       - bash: echo $(SYSTEM_ACCESSTOKEN)
@@ -58,7 +54,7 @@ stages:
           publishLocation: 'Container'
 
 
-
+    
 
 
 
