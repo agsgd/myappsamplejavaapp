@@ -30,7 +30,7 @@ stages:
          steps:
            - script: echo deploy dev
 
-- stage: prodeploment
+- stage: proddeploment
   jobs:
   - deployment: proddeplomentjob
     environment: prod
