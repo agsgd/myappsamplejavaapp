@@ -4,12 +4,8 @@
 
 trigger:
 - master
-
-resources:
-- repo: self
-
-variables:
-  tag: '$(Build.BuildId)'
+pool:
+ vmImage: 'ubuntu latest'
 
 stages:
   - stage: compile
@@ -20,9 +16,7 @@ stages:
           inputs:
             mavenPomFile: 'pom.xml'
             goals: 'compile'
-            publishJUnitResults: true
-            testResultsFiles: '**/surefire-reports/TEST-*.xml'
-            codeCoverageToolOption: 'Cobertura'
+            publishJUnitResults: false
             javaHomeOption: 'JDKVersion'
             mavenVersionOption: 'Default'
             mavenAuthenticateFeed: false
@@ -42,7 +36,10 @@ stages:
               mavenVersionOption: 'Default'
               mavenAuthenticateFeed: false
               effectivePomSkip: false
-              sonarQubeRunAnalysis: false
+              sonarQubeRunAnalysis: true
+              sqMavenPluginVersionChoice: 'latest'
+              pmdRunAnalysis: true
+              
   - stage: package
     jobs:
       - job: mavenpackage
@@ -57,26 +54,26 @@ stages:
               mavenAuthenticateFeed: false
               effectivePomSkip: false
               sonarQubeRunAnalysis: false
+  - stage: codecoverage
+    jobs:
+      - job: mavencodecoverage
+        steps: 
+          - task: Maven@3
+            inputs:
+              mavenPomFile: 'pom.xml'
+              goals: 'cobertura:cobertura -Dcobertura.report.format=xml'
+              publishJUnitResults: true
+              testResultsFiles: 'target/site/cobertura/coverage.xml'
+              codeCoverageToolOption: 'Cobertura'
+              codeCoverageClassFilter: 'target/site/cobertura/coverage.xml'
+              javaHomeOption: 'JDKVersion'
+              mavenVersionOption: 'Default'
+              mavenAuthenticateFeed: false
+              effectivePomSkip: false
+              sonarQubeRunAnalysis: false
           - task: PublishBuildArtifacts@1
             inputs:
               PathtoPublish: '$(Build.ArtifactStagingDirectory)'
               ArtifactName: 'drop'
               publishLocation: 'Container'
-  - stage: Build
-    dependsOn: package
 
-    displayName: Build image
-    jobs:
-    - job: Build
-      displayName: Build
-      pool:
-        vmImage: ubuntu-latest
-      steps:
-      - task: Docker@2
-        displayName: Build an image
-        inputs:
-          containerRegistry: 'dockerhubcredentials'
-          repository: 'agsgd/samplejavaapps'
-          command: 'buildAndPush'
-          Dockerfile: '**/Dockerfile'
-          tags: '$(tag)'
