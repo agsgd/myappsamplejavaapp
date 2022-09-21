@@ -36,9 +36,7 @@ stages:
               mavenVersionOption: 'Default'
               mavenAuthenticateFeed: false
               effectivePomSkip: false
-              sonarQubeRunAnalysis: true
-              sqMavenPluginVersionChoice: 'latest'
-              pmdRunAnalysis: true
+              sonarQubeRunAnalysis: false
               
   - stage: package
     jobs:
