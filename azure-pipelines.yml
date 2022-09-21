@@ -37,21 +37,22 @@ stages:
               mavenAuthenticateFeed: false
               effectivePomSkip: false
               sonarQubeRunAnalysis: false
-              
-  - stage: package
+  - stage: codereview
     jobs:
-      - job: mavenpackage
-        steps:
-          - task: Maven@3
-            inputs:
-              mavenPomFile: 'pom.xml'
-              publishJUnitResults: true
-              testResultsFiles: '**/surefire-reports/TEST-*.xml'
-              javaHomeOption: 'JDKVersion'
-              mavenVersionOption: 'Default'
-              mavenAuthenticateFeed: false
-              effectivePomSkip: false
-              sonarQubeRunAnalysis: false
+          - job: codereview
+            steps:
+              - task: Maven@3
+                inputs:
+                  mavenPomFile: 'pom.xml'
+                  goals: 'test'
+                  publishJUnitResults: true
+                  testResultsFiles: '**/surefire-reports/TEST-*.xml'
+                  javaHomeOption: 'JDKVersion'
+                  mavenVersionOption: 'Default'
+                  mavenAuthenticateFeed: false
+                  effectivePomSkip: false
+                  sonarQubeRunAnalysis: false                     
+
   - stage: codecoverage
     jobs:
       - job: mavencodecoverage
@@ -68,7 +69,22 @@ stages:
               mavenVersionOption: 'Default'
               mavenAuthenticateFeed: false
               effectivePomSkip: false
+  - stage: package
+    jobs:
+      - job: mavenpackage
+        steps:
+          - task: Maven@3
+            inputs:
+              mavenPomFile: 'pom.xml'
+              publishJUnitResults: true
+              testResultsFiles: '**/surefire-reports/TEST-*.xml'
+              javaHomeOption: 'JDKVersion'
+              mavenVersionOption: 'Default'
+              mavenAuthenticateFeed: false
+              effectivePomSkip: false
               sonarQubeRunAnalysis: false
+              
+
           - task: PublishBuildArtifacts@1
             inputs:
               PathtoPublish: '$(Build.ArtifactStagingDirectory)'
