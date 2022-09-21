@@ -10,7 +10,7 @@ pool:
 stages:
   - stage: compile
     jobs:
-      - job: mavencompile
+      - job: compile
         steps:
         - task: Maven@3
           inputs:
@@ -22,9 +22,9 @@ stages:
             mavenAuthenticateFeed: false
             effectivePomSkip: false
             sonarQubeRunAnalysis: false
-  - stage: test
+  - stage: unittest
     jobs:
-      - job: maventest
+      - job: test
         steps:
           - task: Maven@3
             inputs:
