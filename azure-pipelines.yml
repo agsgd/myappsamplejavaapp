@@ -37,6 +37,10 @@ stages:
               mavenAuthenticateFeed: false
               effectivePomSkip: false
               sonarQubeRunAnalysis: false
+          - task: PublishTestResults@2
+            inputs:
+              testResultsFormat: 'JUnit'
+              testResultsFiles: '**/TEST-*.xml'
   - stage: codereview
     jobs:
           - job: codereview
@@ -52,7 +56,10 @@ stages:
                   mavenAuthenticateFeed: false
                   effectivePomSkip: false
                   sonarQubeRunAnalysis: false
-
+              - task: PublishTestResults@2
+                inputs:
+                  testResultsFormat: 'JUnit'
+                  testResultsFiles: '**/TEST-*.xml'
   - stage: codecoverage
     jobs:
       - job: mavencodecoverage
@@ -69,6 +76,11 @@ stages:
               mavenVersionOption: 'Default'
               mavenAuthenticateFeed: false
               effectivePomSkip: false
+          - task: PublishCodeCoverageResults@1
+            inputs:
+              codeCoverageTool: 'Cobertura'
+              summaryFileLocation: 'target/site/cobertura/coverage.xml'
+              pathToSources: 'target/site/cobertura/coverage.xml'
   - stage: package
     jobs:
       - job: mavenpackage
@@ -83,8 +95,12 @@ stages:
               mavenAuthenticateFeed: false
               effectivePomSkip: false
               sonarQubeRunAnalysis: false
+          - task: CopyFiles@2
+            inputs:
+              SourceFolder: '$(System.DefaultWorkingDirectory)'
+              Contents: '**'
+              TargetFolder: '$(Build.ArtifactStagingDirectory)'
               
-
           - task: PublishBuildArtifacts@1
             inputs:
               PathtoPublish: '$(Build.ArtifactStagingDirectory)'
