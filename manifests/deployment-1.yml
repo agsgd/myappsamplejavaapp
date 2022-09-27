@@ -1,0 +1,19 @@
+apiVersion : apps/v1
+kind: Deployment
+metadata:
+  name: "koushik02-918d"
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: "koushik02-918d"
+  template:
+    metadata:
+      labels:
+        app: "koushik02-918d"
+    spec:
+      containers:
+        - name: "koushik02-918d"
+          image: "tanisha.azurecr.io/koushik02"
+          ports:
+          - containerPort: 8080
