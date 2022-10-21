@@ -8,81 +8,81 @@ pool:
  vmImage: 'ubuntu latest'
 
 stages:
-  - stage: compile
-    jobs:
-      - job: compile
-        steps:
-        - task: Maven@3
-          inputs:
-            mavenPomFile: 'pom.xml'
-            goals: 'compile'
-            publishJUnitResults: false
-            javaHomeOption: 'JDKVersion'
-            mavenVersionOption: 'Default'
-            mavenAuthenticateFeed: false
-            effectivePomSkip: false
-            sonarQubeRunAnalysis: false
-  - stage: unittest
-    jobs:
-      - job: test
-        steps:
-          - task: Maven@3
-            inputs:
-              mavenPomFile: 'pom.xml'
-              goals: 'test'
-              publishJUnitResults: true
-              testResultsFiles: '**/surefire-reports/TEST-*.xml'
-              javaHomeOption: 'JDKVersion'
-              mavenVersionOption: 'Default'
-              mavenAuthenticateFeed: false
-              effectivePomSkip: false
-              sonarQubeRunAnalysis: false
-          - task: PublishTestResults@2
-            inputs:
-              testResultsFormat: 'JUnit'
-              testResultsFiles: '**/TEST-*.xml'
-  - stage: codereview
-    jobs:
-          - job: codereview
-            steps:
-              - task: Maven@3
-                inputs:
-                  mavenPomFile: 'pom.xml'
-                  goals: '-P metrics pmd:pmd'
-                  publishJUnitResults: true
-                  testResultsFiles: '**/surefire-reports/TEST-*.xml'
-                  javaHomeOption: 'JDKVersion'
-                  mavenVersionOption: 'Default'
-                  mavenAuthenticateFeed: false
-                  effectivePomSkip: false
-                  sonarQubeRunAnalysis: false
-              - task: PublishTestResults@2
-                inputs:
-                  testResultsFormat: 'JUnit'
-                  testResultsFiles: '**/TEST-*.xml'
-  - stage: codecoverage
-    jobs:
-      - job: mavencodecoverage
-        steps: 
-          - task: Maven@3
-            inputs:
-              mavenPomFile: 'pom.xml'
-              goals: 'cobertura:cobertura -Dcobertura.report.format=xml'
-              publishJUnitResults: true
-              testResultsFiles: 'target/site/cobertura/coverage.xml'
-              codeCoverageToolOption: 'Cobertura'
-              codeCoverageClassFilter: 'target/site/cobertura/coverage.xml'
-              javaHomeOption: 'JDKVersion'
-              mavenVersionOption: 'Default'
-              mavenAuthenticateFeed: false
-              effectivePomSkip: false
-              sonarQubeRunAnalysis: false
-              pmdRunAnalysis: true
-          - task: PublishCodeCoverageResults@1
-            inputs:
-              codeCoverageTool: 'Cobertura'
-              summaryFileLocation: 'target/site/cobertura/coverage.xml'
-              pathToSources: 'target/site/cobertura/coverage.xml'
+  # - stage: compile
+  #   jobs:
+  #     - job: compile
+  #       steps:
+  #       - task: Maven@3
+  #         inputs:
+  #           mavenPomFile: 'pom.xml'
+  #           goals: 'compile'
+  #           publishJUnitResults: false
+  #           javaHomeOption: 'JDKVersion'
+  #           mavenVersionOption: 'Default'
+  #           mavenAuthenticateFeed: false
+  #           effectivePomSkip: false
+  #           sonarQubeRunAnalysis: false
+  # - stage: unittest
+  #   jobs:
+  #     - job: test
+  #       steps:
+  #         - task: Maven@3
+  #           inputs:
+  #             mavenPomFile: 'pom.xml'
+  #             goals: 'test'
+  #             publishJUnitResults: true
+  #             testResultsFiles: '**/surefire-reports/TEST-*.xml'
+  #             javaHomeOption: 'JDKVersion'
+  #             mavenVersionOption: 'Default'
+  #             mavenAuthenticateFeed: false
+  #             effectivePomSkip: false
+  #             sonarQubeRunAnalysis: false
+  #         - task: PublishTestResults@2
+  #           inputs:
+  #             testResultsFormat: 'JUnit'
+  #             testResultsFiles: '**/TEST-*.xml'
+  # - stage: codereview
+  #   jobs:
+  #         - job: codereview
+  #           steps:
+  #             - task: Maven@3
+  #               inputs:
+  #                 mavenPomFile: 'pom.xml'
+  #                 goals: '-P metrics pmd:pmd'
+  #                 publishJUnitResults: true
+  #                 testResultsFiles: '**/surefire-reports/TEST-*.xml'
+  #                 javaHomeOption: 'JDKVersion'
+  #                 mavenVersionOption: 'Default'
+  #                 mavenAuthenticateFeed: false
+  #                 effectivePomSkip: false
+  #                 sonarQubeRunAnalysis: false
+  #             - task: PublishTestResults@2
+  #               inputs:
+  #                 testResultsFormat: 'JUnit'
+  #                 testResultsFiles: '**/TEST-*.xml'
+  # - stage: codecoverage
+  #   jobs:
+  #     - job: mavencodecoverage
+  #       steps: 
+  #         - task: Maven@3
+  #           inputs:
+  #             mavenPomFile: 'pom.xml'
+  #             goals: 'cobertura:cobertura -Dcobertura.report.format=xml'
+  #             publishJUnitResults: true
+  #             testResultsFiles: 'target/site/cobertura/coverage.xml'
+  #             codeCoverageToolOption: 'Cobertura'
+  #             codeCoverageClassFilter: 'target/site/cobertura/coverage.xml'
+  #             javaHomeOption: 'JDKVersion'
+  #             mavenVersionOption: 'Default'
+  #             mavenAuthenticateFeed: false
+  #             effectivePomSkip: false
+  #             sonarQubeRunAnalysis: false
+  #             pmdRunAnalysis: true
+  #         - task: PublishCodeCoverageResults@1
+  #           inputs:
+  #             codeCoverageTool: 'Cobertura'
+  #             summaryFileLocation: 'target/site/cobertura/coverage.xml'
+  #             pathToSources: 'target/site/cobertura/coverage.xml'
   - stage: package
     jobs:
       - job: mavenpackage
@@ -109,3 +109,13 @@ stages:
               ArtifactName: 'drop'
               publishLocation: 'Container'
 
+
+          - task: SonarCloudPrepare@1
+            inputs:
+              SonarCloud: 'sonarcloud'
+              organization: 'Tanisha02'
+              scannerMode: 'Other'
+          - task: SonarCloudPublish@1
+            inputs:
+              pollingTimeoutSec: '300'
+          - task: SonarCloudAnalyze@1
